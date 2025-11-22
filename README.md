@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 HEAD
 
 Getting Started with Create React App This project was bootstrapped with Create React App.
@@ -105,6 +104,4 @@ You can learn more in the Create React App documentation.
 To learn React, check out the React documentation.
 
 
-=======
-# college_event_db
->>>>>>> ec58813088c5c84603d97bd272d9c16d5e6f3f41
+
