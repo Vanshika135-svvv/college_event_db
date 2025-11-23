@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Mail, Lock, LogIn, UserPlus, Sparkles } from "lucide-react";
 import BackgroundAnimation from "./BackgroundAnimation";
+import "./AuthForm.css";
 
 interface AuthFormProps {
   onSuccess: (email: string) => void;
@@ -49,18 +50,17 @@ const AuthForm = ({ onSuccess }: AuthFormProps) => {
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-semibold">Secure Access</span>
           </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-2 animate-stagger-item" style={{ animationDelay: '0.1s' }}>
+          <h2 className="text-4xl font-bold text-gray-900 mb-2 animate-stagger-item stagger-delay-1">
             {isLoginMode ? 'Welcome Back!' : 'Join Us Today'}
           </h2>
-          <p className="text-gray-600 animate-stagger-item" style={{ animationDelay: '0.2s' }}>
+          <p className="text-gray-600 animate-stagger-item stagger-delay-2">
             {isLoginMode 
               ? 'Sign in to manage your events and registrations'
               : 'Create an account to start organizing events'}
           </p>
         </div>
-
-        <div className="bg-white p-8 rounded-2xl shadow-2xl border border-violet-100 form-card-hover animate-stagger-item" style={{ animationDelay: '0.3s' }}>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-white p-8 rounded-2xl shadow-2xl border border-violet-100 form-card-hover animate-stagger-item stagger-delay-3">
+            <form onSubmit={handleSubmit} className="space-y-6">
             <div className="relative">
               <label 
                 htmlFor="auth-email" 
