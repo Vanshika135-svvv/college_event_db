@@ -13,26 +13,54 @@ const AuthForm = ({ onSuccess }: AuthFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
+    
+    // 1. Get the values from the input fields
     const email = (form.elements.namedItem('auth-email') as HTMLInputElement).value;
-    const action = isLoginMode ? 'Login' : 'Sign Up';
-
+    const password = (form.elements.namedItem('auth-password') as HTMLInputElement).value;
+    
     setIsLoading(true);
-    toast.info(`Processing ${action} for ${email}...`);
 
-    setTimeout(() => {
-      if (isLoginMode) {
-        onSuccess(email);
-        toast.success(`🎉 Login successful for ${email.substring(0, email.indexOf('@')) || 'User'}.`);
-      } else {
-        setIsLoginMode(true);
-        toast.success('✨ Registration successful! Please sign in.');
-      }
-      form.reset();
-      setIsLoading(false);
-    }, 1500);
+    // 2. Decide if we are Logging In or Registering
+    const endpoint = isLoginMode 
+        ? 'http://localhost:5000/api/login' 
+        : 'http://localhost:5000/api/register';
+
+    try {
+        // 3. Send the data to the Server (REAL CONNECTION)
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // SUCCESS!
+            if (isLoginMode) {
+                toast.success(`🎉 ${data.message}`);
+                onSuccess(email);
+            } else {
+                toast.success(`✨ ${data.message}. Please sign in.`);
+                setIsLoginMode(true); // Switch to login screen automatically
+                form.reset();
+            }
+        } else {
+            // ERROR (User exists, wrong password, etc.)
+            toast.error(data.message || 'Something went wrong');
+        }
+
+    } catch (error) {
+        console.error("Connection Error:", error);
+        toast.error("Cannot connect to server. Is backend running?");
+    } finally {
+        setIsLoading(false);
+    }
   };
 
   const toggleAuthMode = (e: React.MouseEvent<HTMLAnchorElement>) => {
